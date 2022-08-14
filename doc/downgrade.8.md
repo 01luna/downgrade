@@ -75,13 +75,15 @@ on the ALA.
 
 > Maximum depth to search for cached packages, defaults to _1_.
 
-**\--ala-url** _\<url\>_\
+**\--remote-urls** _\<expression\>_\
 
-> Location of an ALA server, default is *https://archive.archlinux.org*.
+> Escaped shell expression for URLs to search for packages, defaults to:  
+> _'https:<nolink>//archive.archlinux.org/packages/${name:0:1}/$name  
+> https:<nolink>//archive.org/download/archlinux_pkg_${name//[@+.]/_}'_.
 
-**\--ala-only**\
+**\--remore-only**\
 
-> Search ALA only.
+> Search remote sources only.
 
 **\--cached-only**\
 
