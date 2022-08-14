@@ -38,17 +38,17 @@ _enumeration_ An enumeration of the entries for selection.
 
 _package-name_ The name of the package.
 
-_package-epoch_ The epoch of the package in cache or ALA.
+_package-epoch_ The epoch of the package.
 
-_package-version_ The version of the package in cache or ALA.
+_package-version_ The version of the package.
 
-_package-release_ The release of the package in cache or ALA.
+_package-release_ The release of the package.
 
 _location_ Possible values: {remote|/path/to/cache/dir}
 
 If you have already downloaded this version, it will show the cache directory
 where the package is located. _remote_ indicates that the version is available
-on the ALA.
+from remote sources.
 
 # OPTIONS
 
@@ -81,7 +81,7 @@ on the ALA.
 > _'https:<nolink>//archive.archlinux.org/packages/${name:0:1}/$name  
 > https:<nolink>//archive.org/download/archlinux_pkg_${name//[@+.]/_}'_.
 
-**\--remore-only**\
+**\--remote-only**\
 
 > Search remote sources only.
 
@@ -111,7 +111,7 @@ sequence will be treated as pacman options.
 
 ## DEFAULT BEHAVIORS
 
-By default, **downgrade** will search both local caches and the ALA.
+By default, **downgrade** will search local caches, the ALA, and the ALHA.
 
 If only one package with its corresponding location matches, the package will be
 installed without further prompt from the user.
