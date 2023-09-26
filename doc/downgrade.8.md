@@ -89,6 +89,10 @@ from remote sources.
 
 > Search local cache only.
 
+**\--ignore** _\<prompt|always|never\>_\
+
+> Whether to add packages to IgnorePkg, default is _prompt_.
+
 **\--version**\
 
 > Show downgrade version.

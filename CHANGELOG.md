@@ -1,6 +1,13 @@
-## [Ongoing](https://github.com/archlinux-downgrade/downgrade/compare/v11.2.1...main)
+## [Ongoing](https://github.com/archlinux-downgrade/downgrade/compare/v11.3.0...main)
 
 See [issues](https://github.com/archlinux-downgrade/downgrade/issues)
+
+## [v11.3.0](https://github.com/archlinux-downgrade/downgrade/compare/v11.2.1...v11.3.0)
+
+- [NEW] Add `--ignore` option to control ignore behavior (@lilydjwg)
+- [NEW] Zsh completion now uses cache (@lilydjwg)
+- [FIX] zh_CN translations now have spaces between Chinese and English (@lilydjwg)
+- [FIX] Fix typo in ZSH completions (@felixonmars)
 
 ## [v11.2.1](https://github.com/archlinux-downgrade/downgrade/compare/v11.2.0...v11.2.1)
 

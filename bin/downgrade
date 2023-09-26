@@ -27,6 +27,8 @@ $(gettext "Options"):
                    https://archive.org/download/archlinux_pkg_${name//[@+.]/_}'
   --remote-only   $(gettext "only use remote packages")
   --cached-only   $(gettext "only use cached packages")
+  --ignore        <prompt|always|never>
+                  $(gettext "whether to add packages to IgnorePkg")
   --version       $(gettext "show downgrade version")
   -h, --help      $(gettext "show help script")
 
@@ -115,12 +117,20 @@ read_selection() {
 prompt_to_ignore() {
   local pkg ans
 
+  if [[ $DOWNGRADE_IGNORE == never ]]; then
+    return
+  fi
+
   for pkg; do
     if ! pacignore check -c "$PACMAN_CONF" "$pkg"; then
-      eval_gettext "add \$pkg to IgnorePkg? [y/N] "
-      read -r ans
-      if [[ "${ans,,}" == $(gettext 'y')* ]]; then
+      if [[ $DOWNGRADE_IGNORE == always ]]; then
         pacignore add -c "$PACMAN_CONF" "$pkg"
+      else
+        eval_gettext "add \$pkg to IgnorePkg? [y/N] "
+        read -r ans
+        if [[ "${ans,,}" == $(gettext 'y')* ]]; then
+          pacignore add -c "$PACMAN_CONF" "$pkg"
+        fi
       fi
     fi
   done
@@ -412,6 +422,19 @@ parse_options() {
         DOWNGRADE_FROM_REMOTE=0
         DOWNGRADE_FROM_CACHE=1
         ;;
+      --ignore)
+        if [[ -n "$2" && "$2" =~ ^(prompt|always|never)$ ]]; then
+          shift
+          DOWNGRADE_IGNORE="$1"
+        else
+          {
+            gettext "Missing or wrong --ignore argument"
+            echo
+            usage
+          } >&2
+          exit 1
+        fi
+        ;;
       --)
         shift
         pacman_args=("$@")
@@ -472,7 +495,8 @@ DOWNGRADE_FROM_REMOTE=1
 DOWNGRADE_FROM_CACHE=1
 DOWNGRADE_MAXDEPTH=1
 DOWNGRADE_CONF="/etc/xdg/downgrade/downgrade.conf"
-DOWNGRADE_VERSION="11.2.1"
+DOWNGRADE_VERSION="11.3.0"
+DOWNGRADE_IGNORE="prompt"
 
 # Main code execution
 if ((!LIB)); then

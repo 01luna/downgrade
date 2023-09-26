@@ -1,8 +1,9 @@
   $ source "$TESTDIR/../helper.sh"
 
-Does nothing when told no
+Does nothing when "--ignore never"
 
   $ write_pacman_conf "IgnorePkg = foo bar"
-  > echo n | prompt_to_ignore baz >/dev/null
+  > DOWNGRADE_IGNORE=never
+  > prompt_to_ignore baz >/dev/null
   > printf "%s\n" "exit_code=$?"
   exit_code=0
