@@ -59,17 +59,18 @@ The columns have the following meaning:
 .PP
 \f[I]package-name\f[R] The name of the package.
 .PP
-\f[I]package-epoch\f[R] The epoch of the package in cache or ALA.
+\f[I]package-epoch\f[R] The epoch of the package.
 .PP
-\f[I]package-version\f[R] The version of the package in cache or ALA.
+\f[I]package-version\f[R] The version of the package.
 .PP
-\f[I]package-release\f[R] The release of the package in cache or ALA.
+\f[I]package-release\f[R] The release of the package.
 .PP
 \f[I]location\f[R] Possible values: {remote|/path/to/cache/dir}
 .PP
 If you have already downloaded this version, it will show the cache
 directory where the package is located.
-\f[I]remote\f[R] indicates that the version is available on the ALA.
+\f[I]remote\f[R] indicates that the version is available from remote
+sources.
 .SH OPTIONS
 .PP
 \f[B]--pacman\f[R] \f[I]<command>\f[R]
@@ -121,23 +122,30 @@ file, or otherwise defaults to \f[I]/var/log/pacman.log\f[R].
 Maximum depth to search for cached packages, defaults to \f[I]1\f[R].
 .RE
 .PP
-\f[B]--ala-url\f[R] \f[I]<url>\f[R]
+\f[B]--remote-urls\f[R] \f[I]<expression>\f[R]
 .PD 0
 .P
 .PD
 .RS
 .PP
-Location of an ALA server, default is
-\f[I]https://archive.archlinux.org\f[R].
+Escaped shell expression for URLs to search for packages, defaults to:
+.PD 0
+.P
+.PD
+\f[I]\[cq]https://archive.archlinux.org/packages/\f[R]n\f[I]\f[R]a\f[I]\f[R]m\f[I]\f[R]e\f[I]\[u2004]:\[u2004]0\[u2004]:\[u2004]1/name
+.PD 0
+.P
+.PD
+https://archive.org/download/archlinux_pkg\f[R]${name//[\[at]+.]/\f[I]}\[cq]\f[R].
 .RE
 .PP
-\f[B]--ala-only\f[R]
+\f[B]--remote-only\f[R]
 .PD 0
 .P
 .PD
 .RS
 .PP
-Search ALA only.
+Search remote sources only.
 .RE
 .PP
 \f[B]--cached-only\f[R]
@@ -187,8 +195,8 @@ As per the usage syntax, any options supplied after the \f[B]--\f[R]
 character sequence will be treated as pacman options.
 .SS DEFAULT BEHAVIORS
 .PP
-By default, \f[B]downgrade\f[R] will search both local caches and the
-ALA.
+By default, \f[B]downgrade\f[R] will search local caches, the ALA, and
+the ALHA.
 .PP
 If only one package with its corresponding location matches, the package
 will be installed without further prompt from the user.

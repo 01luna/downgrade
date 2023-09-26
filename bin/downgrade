@@ -21,9 +21,11 @@ $(gettext "Options"):
                   $(gettext "or otherwise defaults to") "/var/log/pacman.log"
   --maxdepth      <$(gettext "integer")>
                   $(gettext "maximum depth to search for cached packages, defaults to") 1
-  --ala-url       <url>
-                  $(gettext "location of ALA server, defaults to") "https://archive.archlinux.org"
-  --ala-only      $(gettext "only use ALA server")
+  --remote-urls   <$(gettext "expression")>
+                  $(gettext 'urls to search for package($name), defaults to') 
+                  'https://archive.archlinux.org/packages/${name:0:1}/$name
+                   https://archive.org/download/archlinux_pkg_${name//[@+.]/_}'
+  --remote-only   $(gettext "only use remote packages")
   --cached-only   $(gettext "only use cached packages")
   --ignore        <prompt|always|never>
                   $(gettext "whether to add packages to IgnorePkg")
@@ -184,12 +186,14 @@ search_packages() {
   local name=$1 pkgfile_re index
 
   pkgfile_re="$name-[^-]+-[0-9.]+-(any|$DOWNGRADE_ARCH)\\.pkg\\.tar\\.(gz|xz|zst)"
-  index="$DOWNGRADE_ALA_URL/packages/${name:0:1}/$name/"
 
-  if ((DOWNGRADE_FROM_ALA)); then
-    curl --fail --silent "$index" | sed_msg "to parse A.L.A." -E '
-      /.* href="('"$pkgfile_re"')".*/!d;
-      s||'"$index"'\1|g; s|\+| |g; s|%|\\x|g' | xargs -0 printf "%b"
+  if ((DOWNGRADE_FROM_REMOTE)); then
+    for index in $(eval echo $URLS)
+    do
+      curl --fail --silent "$index" | sed_msg "to parse A.L.A." -E '
+        /.* href="('"$pkgfile_re"')".*/!d;
+        s||'"$index"'\1|g; s|\+| |g; s|%|\\x|g' | xargs -0 printf "%b"
+    done
   fi
 
   if ((DOWNGRADE_FROM_CACHE)); then
@@ -358,13 +362,13 @@ parse_options() {
           exit 1
         fi
         ;;
-      --ala-url)
+      --remote-urls)
         if [[ -n "$2" ]]; then
           shift
-          DOWNGRADE_ALA_URL="$1"
+          URLS="$1"
         else
           {
-            gettext "Missing --ala-url argument"
+            gettext "Missing --remote-urls argument"
             echo
             usage
           } >&2
@@ -410,12 +414,12 @@ parse_options() {
           exit 1
         fi
         ;;
-      --ala-only)
-        DOWNGRADE_FROM_ALA=1
+      --remote-only)
+        DOWNGRADE_FROM_REMOTE=1
         DOWNGRADE_FROM_CACHE=0
         ;;
       --cached-only)
-        DOWNGRADE_FROM_ALA=0
+        DOWNGRADE_FROM_REMOTE=0
         DOWNGRADE_FROM_CACHE=1
         ;;
       --ignore)
@@ -485,8 +489,9 @@ cli() {
 PACMAN="pacman"
 PACMAN_CONF="/etc/pacman.conf"
 DOWNGRADE_ARCH="$(pacman-conf Architecture | head -n 1)"
-DOWNGRADE_ALA_URL="https://archive.archlinux.org"
-DOWNGRADE_FROM_ALA=1
+URLS='https://archive.archlinux.org/packages/${name:0:1}/$name
+https://archive.org/download/archlinux_pkg_${name//[@+.]/_}'
+DOWNGRADE_FROM_REMOTE=1
 DOWNGRADE_FROM_CACHE=1
 DOWNGRADE_MAXDEPTH=1
 DOWNGRADE_CONF="/etc/xdg/downgrade/downgrade.conf"

@@ -21,8 +21,8 @@ _downgrade () {
     '*--pacman-cache[pacman cache directory]:pacman cache directory:_path_files -/' \
     '--pacman-log[pacman log file]:pacman log file:_files' \
     '--maxdepth[maximum depth to search for cached packages]:maximum search depth' \
-    '--ala-url[location of ALA server]:ala url' \
-    '--ala-only[only use ALA server]' \
+    '--remote-urls[urls to search for package]:remote urls' \
+    '--remote-only[only use remote packages]' \
     '--cached-only[only use cached packages]' \
     '--ignore[whether to add packages to IgnorePkg]:action:(prompt always never)' \
     '--version[show downgrade version]' \
